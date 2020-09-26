@@ -1,4 +1,7 @@
 {
   "name": "projectRedux",
-  "displayName": "projectRedux"
+  "displayName": "projectRedux",
+  "androidStatusBar": {
+    "translucent": false
+  }
 }
