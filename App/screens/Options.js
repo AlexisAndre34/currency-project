@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, ScrollView, Linking, Alert} from 'react-native';
+import {SafeAreaView, StyleSheet, ScrollView, Linking, Alert, StatusBar} from 'react-native';
 import Colors from '../constants/colors';
 import Icon from 'react-native-vector-icons/Entypo';
 // components
@@ -22,6 +22,7 @@ const openUrl = (url) => {
 export default () => {
   return (
     <SafeAreaView style={{flex: 1}}>
+        <StatusBar barStyle="dark-content" backgroundColor={Colors.white}/>
         <ScrollView>
             <RowItem
                 text="Themes"
