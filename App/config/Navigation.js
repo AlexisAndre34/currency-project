@@ -1,14 +1,14 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Colors from '../constants/colors';
 
 import Home from '../screens/Home';
 import Options from '../screens/Options';
 import CurrencyList from '../screens/CurrencyList';
-
+import { ConversionContextProvider } from '../util/ConversionContext';
 const MainStack = createStackNavigator();
 const MainStackScreen = () => (
   <MainStack.Navigator /*initialRouteName="CurrencyList" */>
@@ -47,6 +47,8 @@ const ModalStackScreen = () => (
 
 export default () => (
   <NavigationContainer>
-    <ModalStackScreen />
+      <ConversionContextProvider>
+        <ModalStackScreen />
+      </ConversionContextProvider>
   </NavigationContainer>
 );

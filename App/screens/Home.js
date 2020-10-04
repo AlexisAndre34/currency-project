@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,17 +6,18 @@ import {
   Image,
   Dimensions,
   Text,
-  ScrollView,
   TouchableOpacity,
 } from 'react-native';
 import Colors from '../constants/colors';
 import {format} from 'date-fns';
 import Icon from 'react-native-vector-icons/Entypo';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { ConversionContext} from "../util/ConversionContext";
 
 // components
 import {ConversionInput} from '../components/ConversionInput';
 import {Button} from '../components/Button';
+
 
 const screen = Dimensions.get('window');
 
@@ -24,11 +25,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.blue,
     flex: 1,
-	},
-	content: {
-		flex: 1,
-		justifyContent: 'center'
-	},
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   logoContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -43,8 +44,8 @@ const styles = StyleSheet.create({
     height: screen.width * 0.25,
   },
   header: {
-		alignItems: 'flex-end',
-		marginHorizontal: 10
+    alignItems: 'flex-end',
+    marginHorizontal: 10,
   },
   textHeader: {
     color: Colors.white,
@@ -60,19 +61,21 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ({ navigation }) => {
-  const baseCurrency = 'USD';
-  const quoteCurrency = 'EUR';
+export default ({navigation}) => {
+
+  const [value, setValue] = useState('100');
   const conversionRate = 0.8345;
   const date = new Date();
+  const { baseCurrency, quoteCurrency, swapCurrencies } = useContext(ConversionContext);
+
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.blue} />
       <SafeAreaView style={styles.header}>
-				<TouchableOpacity onPress={() => navigation.push("Options")}>
-        	<Icon name="cog" size={32} color={Colors.white} />
-				</TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.push('Options')}>
+          <Icon name="cog" size={32} color={Colors.white} />
+        </TouchableOpacity>
       </SafeAreaView>
       <View style={styles.content}>
         <View style={styles.logoContainer}>
@@ -92,16 +95,26 @@ export default ({ navigation }) => {
 
         <ConversionInput
           text={baseCurrency}
-          value="123"
-          onButtonPress={() => navigation.push('CurrencyList', {title: 'Base Currency', activeCurrency: baseCurrency})}
+          value={value}
+          onButtonPress={() =>
+            navigation.push('CurrencyList', {
+              title: 'Base Currency',
+              isBaseCurrency: true
+            })
+          }
+          onChangeText={(text) => setValue(text)}
           keyboardType="numeric"
         />
 
         <ConversionInput
           text={quoteCurrency}
-          value="123"
-          onButtonPress={() => navigation.push('CurrencyList', {title: 'Quote Currency', activeCurrency: quoteCurrency})}
-          onChangeText={(text) => console.log('text: ', text)}
+          value={value && `${(parseFloat(value) * conversionRate).toFixed(2)}`}
+          onButtonPress={() =>
+            navigation.push('CurrencyList', {
+              title: 'Quote Currency',
+              isBaseCurrency: false
+            })
+          }
           editable={false}
         />
 
@@ -112,7 +125,7 @@ export default ({ navigation }) => {
           )}.`}
         </Text>
 
-        <Button text="Reverse Currencies" onPress={() => alert('todo!')} />
+        <Button text="Reverse Currencies" onPress={() => swapCurrencies()} />
       </View>
     </View>
   );
